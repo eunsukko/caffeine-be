@@ -1,6 +1,5 @@
 package com.woowacourse.caffeine.controller;
 
-import com.woowacourse.caffeine.application.dto.OrderChangeRequest;
 import com.woowacourse.caffeine.application.dto.OrderCreateRequest;
 import com.woowacourse.caffeine.application.dto.OrderResponse;
 import com.woowacourse.caffeine.application.service.OrderService;
@@ -42,7 +41,6 @@ public class OrderController {
     }
 
     @GetMapping("/{orderId}")
-    @Transactional
     public ResponseEntity findById(@PathVariable final Long orderId) {
         final OrderResponse orderResponse = orderService.findById(orderId);
         return ResponseEntity.ok(orderResponse);
