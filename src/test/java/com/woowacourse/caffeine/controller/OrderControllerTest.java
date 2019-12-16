@@ -49,7 +49,7 @@ public class OrderControllerTest {
             .returnResult()
             .getResponseHeaders().getLocation().toASCIIString();
 
-        EntityExchangeResult<OrderResponse> result = webTestClient.get()
+        final EntityExchangeResult<OrderResponse> result = webTestClient.get()
             .uri(uri)
             .exchange()
             .expectStatus().isOk()
