@@ -32,8 +32,8 @@ public class OrderController {
 
     @PostMapping
     public ResponseEntity createOrder(
-            @PathVariable final long shopId,
-            @RequestBody final OrderCreateRequest orderCreateRequest) {
+        @PathVariable final long shopId,
+        @RequestBody final OrderCreateRequest orderCreateRequest) {
         final OrderResponse orderResponse = orderService.create(shopId, orderCreateRequest);
         return ResponseEntity.created(URI.create(String.format("%s/%d/orders/%d", V1_SHOP, shopId, orderResponse.getId())))
             .build();
