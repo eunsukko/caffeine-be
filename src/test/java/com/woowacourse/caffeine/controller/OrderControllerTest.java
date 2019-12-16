@@ -14,6 +14,7 @@ import org.springframework.test.web.reactive.server.EntityExchangeResult;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import reactor.core.publisher.Mono;
 
+import java.util.Arrays;
 import java.util.List;
 
 import static com.woowacourse.caffeine.controller.OrderController.V1_ORDER;
@@ -29,6 +30,38 @@ public class OrderControllerTest {
     private WebTestClient webTestClient;
 
     @Test
+    @DisplayName("주문 생성 및 단일 주문 조회2")
+    void create2() {
+        final long shopId = 100L;
+        final String customerId = "";
+        final long menuItemId1 = 987654321L;
+        final long menuItemId2 = 987654322L;
+        final List<Long> menuItems = Arrays.asList(menuItemId1, menuItemId2);
+        final OrderCreateRequest orderCreateRequest = new OrderCreateRequest(customerId, menuItems);
+
+
+        final String uri = webTestClient.post()
+            .uri(String.format("%s/%d/orders/", "/v2/shops", shopId))
+            .body(Mono.just(orderCreateRequest), OrderCreateRequest.class)
+            .exchange().expectStatus().isCreated()
+            .expectHeader().valueMatches("Location", V1_SHOP + "/\\d*/orders/\\d*")
+            .expectBody()
+            .returnResult()
+            .getResponseHeaders().getLocation().toASCIIString();
+
+        final EntityExchangeResult<OrderResponse> result = webTestClient.get()
+            .uri(uri)
+            .exchange()
+            .expectStatus().isOk()
+            .expectBody(OrderResponse.class)
+            .returnResult();
+
+        final OrderResponse orderResponse = result.getResponseBody();
+
+        assertNotNull(orderResponse);
+    }
+
+    @Test
     @DisplayName("주문 생성 및 단일 주문 조회")
     void create() {
         final long shopId = 100L;
@@ -39,10 +72,10 @@ public class OrderControllerTest {
         assertNotNull(uri);
 
         EntityExchangeResult<OrderResponse> getResult = webTestClient.get()
-                .uri(uri)
-                .exchange()
-                .expectStatus().isOk()
-                .expectBody(OrderResponse.class).returnResult();
+            .uri(uri)
+            .exchange()
+            .expectStatus().isOk()
+            .expectBody(OrderResponse.class).returnResult();
 
         final OrderResponse orderResponse = getResult.getResponseBody();
 
@@ -55,14 +88,14 @@ public class OrderControllerTest {
         final OrderCreateRequest orderCreateRequest = new OrderCreateRequest(menuItemId, "");
 
         return webTestClient.post()
-                .uri(url)
-                .contentType(MediaType.APPLICATION_JSON)
-                .body(Mono.just(orderCreateRequest), OrderCreateRequest.class)
-                .exchange()
-                .expectStatus().isCreated()
-                .expectHeader()
-                .valueMatches("Location", V1_SHOP + "/\\d*/orders/\\d*")
-                .expectBody().returnResult();
+            .uri(url)
+            .contentType(MediaType.APPLICATION_JSON)
+            .body(Mono.just(orderCreateRequest), OrderCreateRequest.class)
+            .exchange()
+            .expectStatus().isCreated()
+            .expectHeader()
+            .valueMatches("Location", V1_SHOP + "/\\d*/orders/\\d*")
+            .expectBody().returnResult();
     }
 
     @Test
@@ -77,10 +110,10 @@ public class OrderControllerTest {
     private List<OrderResponse> findOrdersByStatus(final long shopId, final String status) {
         String url = String.format("%s/%d/orders?status=%s", V1_SHOP, shopId, status);
         EntityExchangeResult<List<OrderResponse>> result = webTestClient.get()
-                .uri(url)
-                .exchange()
-                .expectStatus().isOk()
-                .expectBodyList(OrderResponse.class).returnResult();
+            .uri(url)
+            .exchange()
+            .expectStatus().isOk()
+            .expectBodyList(OrderResponse.class).returnResult();
 
         return result.getResponseBody();
     }
@@ -92,15 +125,15 @@ public class OrderControllerTest {
         final long shopId = 100L;
         final long menuItemId = 987654321L;
         String location = createOrder(shopId, menuItemId)
-                .getResponseHeaders().getLocation().toASCIIString();
+            .getResponseHeaders().getLocation().toASCIIString();
 
         // when & then
         String url = String.format("%s/accept", location);
         webTestClient
-                .put()
-                .uri(url)
-                .exchange()
-                .expectStatus().isOk();
+            .put()
+            .uri(url)
+            .exchange()
+            .expectStatus().isOk();
     }
 
     @Test
@@ -110,15 +143,15 @@ public class OrderControllerTest {
         final long shopId = 100L;
         final long menuItemId = 987654321L;
         String location = createOrder(shopId, menuItemId)
-                .getResponseHeaders().getLocation().toASCIIString();
+            .getResponseHeaders().getLocation().toASCIIString();
 
         // when & then
         String url = String.format("%s/reject", location);
         webTestClient
-                .put()
-                .uri(url)
-                .exchange()
-                .expectStatus().isOk();
+            .put()
+            .uri(url)
+            .exchange()
+            .expectStatus().isOk();
     }
 
     @Test
@@ -128,21 +161,21 @@ public class OrderControllerTest {
         final long shopId = 100L;
         final long menuItemId = 987654321L;
         String location = createOrder(shopId, menuItemId)
-                .getResponseHeaders().getLocation().toASCIIString();
+            .getResponseHeaders().getLocation().toASCIIString();
 
         // when & then
         String acceptUrl = String.format("%s/accept", location);
         webTestClient
-                .put()
-                .uri(acceptUrl)
-                .exchange()
-                .expectStatus().isOk();
+            .put()
+            .uri(acceptUrl)
+            .exchange()
+            .expectStatus().isOk();
         String finishUrl = String.format("%s/finish", location);
         webTestClient
-                .put()
-                .uri(finishUrl)
-                .exchange()
-                .expectStatus().isOk();
+            .put()
+            .uri(finishUrl)
+            .exchange()
+            .expectStatus().isOk();
     }
 
     //    @Test
@@ -152,10 +185,10 @@ public class OrderControllerTest {
         final OrderChangeRequest orderChangeRequest = new OrderChangeRequest(OrderStatus.IN_PROGRESS.toString());
 
         webTestClient.put()
-                .uri(V1_ORDER + "/" + orderId)
-                .contentType(MediaType.APPLICATION_JSON)
-                .body(Mono.just(orderChangeRequest), OrderChangeRequest.class)
-                .exchange()
-                .expectStatus().isOk();
+            .uri(V1_ORDER + "/" + orderId)
+            .contentType(MediaType.APPLICATION_JSON)
+            .body(Mono.just(orderChangeRequest), OrderChangeRequest.class)
+            .exchange()
+            .expectStatus().isOk();
     }
 }
