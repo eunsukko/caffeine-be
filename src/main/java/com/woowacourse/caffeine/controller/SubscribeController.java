@@ -2,11 +2,14 @@ package com.woowacourse.caffeine.controller;
 
 import com.woowacourse.caffeine.application.service.CustomerNotificationService;
 import com.woowacourse.caffeine.application.service.ShopNotificationService;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseBodyEmitter;
+
+import java.time.LocalDateTime;
 
 import static com.woowacourse.caffeine.controller.SubscribeController.V1_SUBSCRIBE;
 
@@ -27,6 +30,13 @@ public class SubscribeController {
     @GetMapping("/customers/{id}")
     public ResponseBodyEmitter subscribeCustomer(@PathVariable String id) {
         return customerNotificationService.subscribe(id);
+    }
+
+    @GetMapping("/customers/send")
+    public ResponseEntity sendMessage() {
+        customerNotificationService.sendAll("send message " + LocalDateTime.now().toString());
+
+        return ResponseEntity.ok("good");
     }
 
     @GetMapping("/shops/{id}")
