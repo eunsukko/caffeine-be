@@ -21,7 +21,6 @@ class NotificationInternalService<T> {
 
     public ResponseBodyEmitter subscribe(final T id) {
         ResponseBodyEmitter emitter = createSseEmitter(id);
-        ;
 
         try {
             emitter.send("ok");

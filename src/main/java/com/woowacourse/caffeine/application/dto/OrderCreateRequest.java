@@ -7,7 +7,7 @@ public class OrderCreateRequest {
 
     private long menuItemId;
     private String customerId;
-    private List<Long> menuItems;
+    private List<Long> menuItemIds;
 
     public OrderCreateRequest() {
     }
@@ -17,9 +17,9 @@ public class OrderCreateRequest {
         this.customerId = customerId;
     }
 
-    public OrderCreateRequest(final String customerId, final List<Long> menuItems) {
+    public OrderCreateRequest(final String customerId, final List<Long> menuItemIds) {
         this.customerId = customerId;
-        this.menuItems = menuItems;
+        this.menuItemIds = menuItemIds;
     }
 
     public long getMenuItemId() {
@@ -38,11 +38,11 @@ public class OrderCreateRequest {
         this.customerId = customerId;
     }
 
-    public List<Long> getMenuItems() {
-        return menuItems;
+    public List<Long> getMenuItemIds() {
+        return menuItemIds;
     }
 
-    public void setMenuItems(final List<Long> menuItems) {
-        this.menuItems = menuItems;
+    public void setMenuItemIds(final List<Long> menuItemIds) {
+        this.menuItemIds = menuItemIds;
     }
 }
